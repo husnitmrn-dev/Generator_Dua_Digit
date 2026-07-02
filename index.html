@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Master & Filter Angka Main V4</title>
+    <title>Generator Master & Filter Angka Main V5</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f6f9; padding: 10px; color: #333; margin: 0; }
         .container { max-width: 750px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 10px auto; box-sizing: border-box; }
@@ -42,6 +42,9 @@
         textarea { resize: vertical; height: 90px; }
         textarea.input-filter { height: 80px; letter-spacing: 1px; font-weight: bold; color: #dc3545; font-family: Arial, sans-serif; line-height: 1.4; }
 
+        .checkbox-bb { display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #2c3e50; cursor: pointer; }
+        .checkbox-bb input { width: 16px; height: 16px; cursor: pointer; }
+
         .btn-group { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
         button { flex: 1; min-width: 100px; padding: 12px; color: white; border: none; border-radius: 5px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.3s; -webkit-tap-highlight-color: transparent; }
         
@@ -75,7 +78,6 @@
         .badge-biaya { background: #2c3e50; }
         .btn-salin-v4 { min-width: auto; width: auto; padding: 6px 14px; font-size: 13px; background-color: #7f8c8d; border-radius: 4px; color: white; }
         .btn-salin-v4:hover { background-color: #2c3e50; }
-        .info { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -84,32 +86,31 @@
     <h2>Generator Master 2D & Filter</h2>
     <p class="subtitle">Sistem Pengolah Angka Tarung, Tarung Dalam, & Angka Mati</p>
     
-    <!-- 1. FORM ANGKA TARUNG KEPALA & EKOR -->
     <div class="section-border">
         <div class="section-title" style="color: #28a745;">1. ANGKA TARUNG KEPALA & EKOR (2D)</div>
         <div class="form-row-inline">
             <div class="form-group-inline" style="flex:1;"><label>KEPALA</label><input type="text" id="grupKepala" class="input-angka" placeholder="0-9" inputmode="numeric" oninput="validasiInput(this)"></div>
             <div class="form-group-inline" style="flex:1;"><label>EKOR</label><input type="text" id="grupEkor" class="input-angka" placeholder="0-9" inputmode="numeric" oninput="validasiInput(this)"></div>
         </div>
+        <label class="checkbox-bb"><input type="checkbox" id="bbPoltar" checked> Otomatis Bolak-Balik (BB)</label>
         <div class="btn-group">
             <button class="btn-primary" onclick="processEngine('POLTAR')">Proses Angka Tarung</button>
             <button class="btn-secondary" onclick="resetPoltarOnly()">Reset</button>
         </div>
     </div>
 
-    <!-- 2. FORM ANGKA TARUNG DALAM -->
     <div class="section-border tarik-dalam">
         <div class="section-title" style="color: #6f42c1;">2. ANGKA TARUNG DALAM (2D)</div>
         <div class="form-row-inline">
             <div class="form-group-inline"><label>Tardal 2D</label><input type="text" id="td2D" class="input-angka" placeholder="Masukkan Angka..." inputmode="numeric" oninput="validasiInput(this)"></div>
         </div>
+        <label class="checkbox-bb"><input type="checkbox" id="bbTardal" checked> Otomatis Bolak-Balik (BB)</label>
         <div class="btn-group">
             <button class="btn-purple" onclick="processEngine('TARIK')">Proses Tarung Dalam</button>
             <button class="btn-secondary" onclick="resetTarikOnly()">Reset</button>
         </div>
     </div>
 
-    <!-- 3. FILTER ANGKA MATI -->
     <div class="section-border filter-section">
         <div class="section-title" style="color: #dc3545;">3. FILTER ANGKA MATI (2D)</div>
         <div class="form-group">
@@ -120,7 +121,6 @@
     
     <hr style="border: 1px solid #ddd; margin: 20px 0;">
 
-    <!-- 4. SEKSI FILTER & GENERATOR ANGKA MAIN (HASIL DIATAS) -->
     <div class="section-border filter-main-section">
         <div class="section-title" style="color: #2ecc71;">4. FILTER & GENERATOR ANGKA MAIN (Hasil Diatas)</div>
         <div class="form-group">
@@ -139,9 +139,7 @@
         </div>
     </div>
     
-    <!-- HASIL KATEGORI PECAHAN BET -->
     <div class="result-container" id="hasilSeksi" style="display:none;">
-        <!-- SEMUA MASUK / TANPA PECAH -->
         <div class="result-box-v4 all-match" id="box-all">
             <div class="result-header-v4">
                 <div class="result-title-v4" id="title-all">Semua Angka Main Masuk (0 Pecah) <span class="badge" id="count-all">0</span> <span class="badge badge-biaya" id="total-all">Rp 0</span></div>
@@ -153,7 +151,6 @@
             <div class="result-output-v4" id="out-all">-</div>
         </div>
         
-        <!-- PECAH 1 -->
         <div class="result-box-v4 match-1" id="box-1">
             <div class="result-header-v4">
                 <div class="result-title-v4">Pecah 1 Angka Main <span class="badge" id="count-1">0</span> <span class="badge badge-biaya" id="total-1">Rp 0</span></div>
@@ -165,7 +162,6 @@
             <div class="result-output-v4" id="out-1">-</div>
         </div>
         
-        <!-- PECAH 2 -->
         <div class="result-box-v4 match-2" id="box-2">
             <div class="result-header-v4">
                 <div class="result-title-v4">Pecah 2 Angka Main <span class="badge" id="count-2">0</span> <span class="badge badge-biaya" id="total-2">Rp 0</span></div>
@@ -177,7 +173,6 @@
             <div class="result-output-v4" id="out-2">-</div>
         </div>
         
-        <!-- PECAH 3 -->
         <div class="result-box-v4 match-3" id="box-3">
             <div class="result-header-v4">
                 <div class="result-title-v4">Pecah 3 Angka Main <span class="badge" id="count-3">0</span> <span class="badge badge-biaya" id="total-3">Rp 0</span></div>
@@ -189,7 +184,6 @@
             <div class="result-output-v4" id="out-3">-</div>
         </div>
         
-        <!-- PECAH 4 ATAU LEBIH -->
         <div class="result-box-v4 match-4" id="box-4">
             <div class="result-header-v4">
                 <div class="result-title-v4">Pecah 4 Angka Main atau Lebih <span class="badge" id="count-4">0</span> <span class="badge badge-biaya" id="total-4">Rp 0</span></div>
@@ -224,6 +218,7 @@ function processEngine(mode) {
     if (mode === 'POLTAR') {
         let kepVal = document.getElementById('grupKepala').value; 
         let ekorVal = document.getElementById('grupEkor').value;
+        let isBB = document.getElementById('bbPoltar').checked;
         if (kepVal === "" || ekorVal === "") { alert("Mohon isi kolom KEPALA dan EKOR!"); return; }
         
         let arrKep = kepVal.split('');
@@ -233,10 +228,17 @@ function processEngine(mode) {
             arrEkor.forEach(ekor => { 
                 let line = kep + ekor;
                 if (!isAngkaMati(line)) { kombinasi2D.add(line); }
+                
+                // JIKA CHECKBOX BB CENTANG: balikkan angka
+                if(isBB) {
+                    let kebalikan = ekor + kep;
+                    if (!isAngkaMati(kebalikan)) { kombinasi2D.add(kebalikan); }
+                }
             }); 
         });
     } else {
         let td2dVal = document.getElementById('td2D').value;
+        let isBB = document.getElementById('bbTardal').checked;
         if (td2dVal === "" || td2dVal.length < 2) { alert("Mohon isi minimal 2 angka di kolom Tardal 2D!"); return; }
         
         let arrAngka = td2dVal.split('');
@@ -244,6 +246,12 @@ function processEngine(mode) {
             for(let j=0; j<arrAngka.length; j++) {
                 let line = arrAngka[i] + arrAngka[j];
                 if (!isAngkaMati(line)) { kombinasi2D.add(line); }
+                
+                // JIKA CHECKBOX BB CENTANG
+                if(isBB) {
+                    let kebalikan = arrAngka[j] + arrAngka[i];
+                    if (!isAngkaMati(kebalikan)) { kombinasi2D.add(kebalikan); }
+                }
             }
         }
     }
@@ -255,7 +263,6 @@ function processEngine(mode) {
         document.getElementById('inputAngka').value = "";
         alert("Tidak ada angka yang dihasilkan (mungkin tersaring Angka Mati).");
     }
-    // Sembunyikan hasil lama jika ada kalkulasi baru di atas
     document.getElementById('hasilSeksi').style.display = 'none';
 }
 
@@ -268,14 +275,12 @@ function prosesAngkaMain() {
 
     let listFilter = rawFilter.split(',').map(item => item.trim()).filter(item => item !== "");
     
-    // Sembunyikan semua box pecahan terlebih dahulu
     document.getElementById('box-all').style.display = 'none';
     document.getElementById('box-1').style.display = 'none';
     document.getElementById('box-2').style.display = 'none';
     document.getElementById('box-3').style.display = 'none';
     document.getElementById('box-4').style.display = 'none';
 
-    // JIKA ANGKA MAIN KOSONG: Berfungsi sebagai generator polosan murni
     if (listFilter.length === 0) {
         let semuaMasuk = new Set(listAngka);
         globalCounts = { all: semuaMasuk.size, p1: 0, p2: 0, p3: 0, p4: 0 };
@@ -288,7 +293,6 @@ function prosesAngkaMain() {
         return;
     }
 
-    // JIKA ANGKA MAIN DIISI: Berjalan dengan filter pecahan otomatis
     document.getElementById('title-all').childNodes[0].nodeValue = "Semua Angka Main Masuk (0 Pecah) ";
     
     let semuaMasuk = new Set();
@@ -320,6 +324,7 @@ function prosesAngkaMain() {
     globalCounts.all = semuaMasuk.size;
     globalCounts.p1 = pecah1.size;
     globalCounts.p2 = pecah2.size;
+    globalCounts.p3 = pec3.size; // Perbaikan typo variabel
     globalCounts.p3 = pecah3.size;
     globalCounts.p4 = pecah4Plus.size;
 
